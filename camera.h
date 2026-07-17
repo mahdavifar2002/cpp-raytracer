@@ -101,8 +101,7 @@ class camera {
 
         hit_record rec;
 
-        if (world.hit(r, interval(0, infinity), rec)) {
-            // return 0.5 * (rec.normal + color(1, 1, 1));
+        if (world.hit(r, interval(0.001, infinity), rec)) {
             vec3 direction = random_on_hemisphere(rec.normal);
             return 0.5 * ray_color(ray(rec.p, direction), depth - 1, world);
         }
