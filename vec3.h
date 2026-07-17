@@ -45,6 +45,12 @@ class vec3 {
         return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
     }
 
+    bool near_zero() const {
+        // Return true of the vector is close to zero in all dimensions.
+        auto epsilon = 1e-8;
+        return (std::fabs(e[0]) < epsilon) && (std::fabs(e[1] < epsilon)) && (std::fabs(e[2] < epsilon));
+    }
+
     static vec3 random() {
         return vec3(random_double(), random_double(), random_double());
     }

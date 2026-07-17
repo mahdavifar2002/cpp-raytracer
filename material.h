@@ -15,4 +15,25 @@ class material {
     }
 };
 
+class lambertian : public material {
+  public:
+    lambertian(const color& albedo) : albedo(albedo) {}
+
+    bool scatter (const ray& r, const hit_record& rec, color& attenuation, ray& scattered)
+    const override {
+        auto scattered_direction = rec.normal + random_unit_vector();
+
+        // Catch degenerate scatter direction.
+        if (scattered_direction.near_zero())
+            scattered_direction = rec.normal;
+
+        scattered = ray(rec.p, scattered_direction);
+        attenuation = albedo;
+        return true;
+    }
+
+  private:
+    color albedo;
+};
+
 #endif
