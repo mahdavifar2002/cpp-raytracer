@@ -1,6 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include <vector>
+
 #include "hittable_list.h"
 #include "material.h"
 
@@ -23,12 +25,12 @@ class camera {
         initialize();
 
         std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+        
+        std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width));
+        int lines_completed = 0;
 
+        #pragma omp parallel for schedule(dynamic)
         for (int j = 0; j < image_height; j++) {
-            std::clog << "\rScanlines remaining: %"
-                    << double(image_height - j) / image_height * 100
-                    << ' ' << std::flush;
-
             for (int i = 0; i < image_width; i++) {
                 auto pixel_color = color(0, 0, 0);
                 
@@ -37,9 +39,25 @@ class camera {
                     pixel_color += ray_color(r, max_depth, world);
                 }
 
-                write_color(std::cout, pixel_samples_scale * pixel_color);
+                image[j][i] = pixel_samples_scale * pixel_color;
+            }
+
+            # pragma omp critical
+            {
+                lines_completed++;
+                
+                std::clog << "\rScanlines remaining: %"
+                    << 100 * (image_height - lines_completed) / image_height
+                    << ' ' << std::flush;
             }
         }
+
+        for (int j = 0; j < image_height; j++) {
+            for (int i = 0; i < image_width; i++) {
+                write_color(std::cout, image[j][i]);
+            }
+        }
+
 
         std::clog << "\rDone.                               \n";
     }
