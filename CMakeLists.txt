@@ -14,8 +14,9 @@ elseif(MSVC)
     add_compile_options(/O2 /fp:fast)
 endif()
 
-# Define the executable name ("RayTracer") and its source files
-add_executable(RayTracer main.cc)
+# Define the executable name ("RayTracer") and its source and header files
+add_executable(RayTracer src/main.cc)
+target_include_directories(RayTracer PRIVATE include)
 
 # Find and link OpenMP to multithread the render loop
 find_package(OpenMP)
