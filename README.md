@@ -1,4 +1,4 @@
-# Ray Tracer
+# C++ Ray Tracer
 
 A multithreaded CPU ray tracer written in C++. This project is an implementation of Peter Shirley's [*Ray Tracing in One Weekend*](https://raytracing.github.io) series, expanded with a CMake build system, compiler optimization, and OpenMP integration for parallel rendering.
 
