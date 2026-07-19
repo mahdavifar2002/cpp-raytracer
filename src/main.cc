@@ -7,6 +7,7 @@
 #include "sphere.h"
 
 #include <iostream>
+#include <cstdlib>
 
 int main() {
     hittable_list world;
@@ -14,18 +15,24 @@ int main() {
     auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
 
+    srand(2);
+
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
             auto choose_mat = random_double();
             point3 center(a + 0.8*random_double(), 0.2, b + 0.8*random_double());
+            point3 center2 = center;
 
-            if ((center - point3(4, 0.2, 0)).length() > 0.9) {
+            if ((center - point3( 4, 0.2, 0)).length() > 0.9
+             && (center - point3( 0, 0.2, 0)).length() > 0.9
+             && (center - point3(-4, 0.2, 0)).length() > 0.9) {
                 shared_ptr<material> sphere_material;
 
                 if (choose_mat < 0.8) {
                     // diffuse
                     auto albedo = color::random() * color::random();
                     sphere_material = make_shared<lambertian>(albedo);
+                    center2 += vec3(0, random_double(0, 0.5), 0);
                 }
                 else if (choose_mat < 0.95) {
                     // metal
@@ -38,7 +45,7 @@ int main() {
                     sphere_material = make_shared<dielectric>(1.5);
                 }
 
-                world.add(make_shared<sphere>(center, 0.2, sphere_material));
+                world.add(make_shared<sphere>(center, center2, 0.2, sphere_material));
             }
         }
     }
@@ -55,8 +62,8 @@ int main() {
     camera cam;
 
     cam.aspect_ratio     = 16.0 / 9.0;
-    cam.image_width      = 1920;
-    cam.sample_per_pixel = 10;
+    cam.image_width      = 400;
+    cam.sample_per_pixel = 100;
     cam.max_depth        = 50;
 
     cam.vfov = 20;

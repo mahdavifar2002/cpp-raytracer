@@ -24,12 +24,14 @@ cmake --build .
 ```
 
 ## Running & Profiling the Render
-Once compiled, you can run the executable, pipe the output to a `.ppm` image file, and benchmark the total render time.
+Once compiled, you can run the executable and pipe the output to a `.ppm` image file.
 
-From inside the `build` directory, run the following one-liner to execute the render, measure the elapsed time in seconds, and automatically open the resulting image:
+The project uses the [`aminnj/cpptqdm`](https://github.com/aminnj/cpptqdm) header to show the progress bar and benchmark the total render time.
+
+From inside the `build` directory, run the following one-liner to compile, execute the render, measure the elapsed time in seconds, and automatically open the resulting image:
 
 ```bash
-cmake --build . && /usr/bin/time -f "%e seconds" ./RayTracer > image.ppm && xdg-open image.ppm
+cmake --build . && ./RayTracer > image.ppm && xdg-open image.ppm
 ```
 
 ## Project Structure

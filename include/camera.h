@@ -5,6 +5,7 @@
 
 #include "hittable_list.h"
 #include "material.h"
+#include "tqdm.h"
 
 class camera {
   public:
@@ -28,6 +29,7 @@ class camera {
         
         std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width));
         int lines_completed = 0;
+        tqdm bar;
 
         #pragma omp parallel for schedule(dynamic)
         for (int j = 0; j < image_height; j++) {
@@ -44,22 +46,18 @@ class camera {
 
             # pragma omp critical
             {
+                bar.progress(lines_completed, image_height);
                 lines_completed++;
-                
-                std::clog << "\rScanlines remaining: %"
-                    << 100 * (image_height - lines_completed) / image_height
-                    << ' ' << std::flush;
             }
         }
+
+        bar.finish();
 
         for (int j = 0; j < image_height; j++) {
             for (int i = 0; i < image_width; i++) {
                 write_color(std::cout, image[j][i]);
             }
         }
-
-
-        std::clog << "\rDone.                               \n";
     }
 
   private:
@@ -122,8 +120,9 @@ class camera {
 
         auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
         auto ray_direction = pixel_sample - ray_origin;
+        auto ray_time = random_double();
 
-        return ray(ray_origin, ray_direction);
+        return ray(ray_origin, ray_direction, ray_time);
     }
 
     vec3 sample_square() const {
