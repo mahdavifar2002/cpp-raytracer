@@ -33,6 +33,10 @@ class aabb {
         return x;
     }
 
+    double volume() const {
+        return x.size() * y.size() * z.size();
+    }
+
     bool hit(const ray& r, interval ray_t) const {
         const point3& ray_orig = r.origin();
         const vec3&   ray_dir  = r.direction();
