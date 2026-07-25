@@ -1,7 +1,6 @@
 #ifndef RTW_STB_IMAGE_H
 #define RTW_STB_IMAGE_H
 
-#define STB_IMAGE_IMPLEMENTATION
 #define STBI_FAILURE_USERMSG
 #include "external/stb_image.h"
 
@@ -38,7 +37,7 @@ class rtw_image {
 
     ~rtw_image() {
         delete[] bdata;
-        STBI_FREE(fdata);
+        stbi_image_free(fdata);
     }
 
     // Loads the linear (gamma=1) image data from the given file name. Returns true if the
