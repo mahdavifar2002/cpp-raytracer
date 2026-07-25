@@ -1,7 +1,6 @@
 #ifndef RTW_STB_IMAGE_H
 #define RTW_STB_IMAGE_H
 
-#define STBI_FAILURE_USERMSG
 #include "external/stb_image.h"
 
 #include <cstdlib>
