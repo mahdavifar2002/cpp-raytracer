@@ -172,6 +172,8 @@ void quads() {
     world.add(make_shared<quad>(point3(-2, 3, 1), vec3(4, 0, 0), vec3(0, 0, 4), upper_orange));
     world.add(make_shared<quad>(point3(-2,-3, 5), vec3(4, 0, 0), vec3(0, 0,-4), lower_teal));
 
+    // world = hittable_list(make_shared<bvh_node>(world));
+
     // Camera
     camera cam;
 

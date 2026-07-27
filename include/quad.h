@@ -68,16 +68,63 @@ class quad : public hittable {
 
     aabb bounding_box() const override { return bbox; }
 
-  private:
+  protected:
     point3 Q;
     vec3 u, v;
     shared_ptr<material> mat;
     aabb bbox;
 
+  private:
     // normal.point = A.x+B.y+C.z = D, for all points in quad.
     vec3 normal;
     double D;
     vec3 w;
+};
+
+class tri : public quad {
+  public:
+    tri(const point3& Q, const vec3& u, const vec3& v, shared_ptr<material> mat)
+      : quad(Q, u, v, mat)
+    {
+        set_bounding_box();
+    }
+    
+    void set_bounding_box() override {
+        auto bbox_diagonal1 = aabb(Q, Q + u);
+        auto bbox_diagonal2 = aabb(Q, Q + v);
+        bbox = aabb(bbox_diagonal1, bbox_diagonal2);
+    }
+    
+    bool is_interior(double a, double b, hit_record& rec) const override {
+        if (a + b > 1)
+            return false;
+        
+        return quad::is_interior(a, b, rec);
+    }
+};
+
+class ellipse : public quad {
+  public:
+    ellipse(const point3& center, const vec3& u, const vec3& v, shared_ptr<material> mat)
+      : quad(center, u, v, mat)
+    {
+        set_bounding_box();
+    }
+    
+    void set_bounding_box() override {
+        auto bbox_diagonal1 = aabb(Q - u - v, Q + u + v);
+        auto bbox_diagonal2 = aabb(Q - u + v, Q + u - v);
+        bbox = aabb(bbox_diagonal1, bbox_diagonal2);
+    }
+
+    bool is_interior(double a, double b, hit_record& rec) const override {
+        if (a*a + b*b > 1)
+            return false;
+        
+        rec.u = (a + 1) / 2;
+        rec.v = (b + 1) / 2;
+        return true;
+    }
 };
 
 #endif
