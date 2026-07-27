@@ -11,6 +11,7 @@ class quad : public hittable {
         auto n = cross(u, v);
         normal = unit_vector(n);
         D = dot(normal, Q);
+        w = n / dot(n, n);
 
         set_bounding_box();
     }
@@ -34,13 +35,34 @@ class quad : public hittable {
         if (!ray_t.contains(t))
             return false;
         
+        // Determine if the hit point lies within the planar shape using its plane coordinates.
         auto intersection = r.at(t);
+        vec3 planar_hitpt_vector = intersection - Q;
+        auto alpha = dot(w, cross(planar_hitpt_vector, v));
+        auto beta = dot(w, cross(u, planar_hitpt_vector));
 
+        if (!is_interior(alpha, beta, rec))
+            return false;
+
+        // Ray hits the 2D shape; set the rest of the hit record and return true.
         rec.t = t;
         rec.p = intersection;
         rec.set_face_normal(r, normal);
         rec.mat = mat; 
         
+        return true;
+    }
+
+    // Given the hit point in the plane coordinates, returns false if it is outside the
+    // primitive, otherwise sets the hit record UV coordinates and returns true.
+    virtual bool is_interior(double a, double b, hit_record& rec) const {
+        interval unit_interval = interval(0, 1);
+
+        if (!unit_interval.contains(a) || !unit_interval.contains(b))
+            return false;
+        
+        rec.u = a;
+        rec.v = b;
         return true;
     }
 
@@ -55,6 +77,7 @@ class quad : public hittable {
     // normal.point = A.x+B.y+C.z = D, for all points in quad.
     vec3 normal;
     double D;
+    vec3 w;
 };
 
 #endif
