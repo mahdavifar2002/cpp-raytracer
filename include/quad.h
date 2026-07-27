@@ -8,6 +8,10 @@ class quad : public hittable {
     quad(const point3& Q, const vec3& u, const vec3& v, shared_ptr<material> mat)
       : Q(Q), u(u), v(v), mat(mat)
     {
+        auto n = cross(u, v);
+        normal = unit_vector(n);
+        D = dot(normal, Q);
+
         set_bounding_box();
     }
 
@@ -19,7 +23,25 @@ class quad : public hittable {
     }
 
     bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
-        return false; // To be implemented
+        auto denom = dot(normal, r.direction());
+
+        // No hit if the ray is parallel to the plane.
+        if (std::fabs(denom) < 1e-8)
+            return false;
+        
+        // Return false if the hit parameter t is outside the ray interval.
+        auto t = (D - dot(normal, r.origin())) / denom;
+        if (!ray_t.contains(t))
+            return false;
+        
+        auto intersection = r.at(t);
+
+        rec.t = t;
+        rec.p = intersection;
+        rec.set_face_normal(r, normal);
+        rec.mat = mat; 
+        
+        return true;
     }
 
     aabb bounding_box() const override { return bbox; }
@@ -29,6 +51,10 @@ class quad : public hittable {
     vec3 u, v;
     shared_ptr<material> mat;
     aabb bbox;
+
+    // normal.point = A.x+B.y+C.z = D, for all points in quad.
+    vec3 normal;
+    double D;
 };
 
 #endif
