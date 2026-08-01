@@ -29,11 +29,20 @@ class camera {
         std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
         
         std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width));
+
+        // Create and shuffle scanline indices
+        std::vector<int> line_indices(image_height);
+        std::iota(line_indices.begin(), line_indices.end(), 0);
+        std::mt19937 generator(1337);
+        std::shuffle(line_indices.begin(), line_indices.end(), generator);
+
         int lines_completed = 0;
         tqdm bar;
 
         #pragma omp parallel for schedule(dynamic)
-        for (int j = 0; j < image_height; j++) {
+        for (int k = 0; k < image_height; k++) {
+            int j = line_indices[k]; // Grab a shuffled row index
+            
             for (int i = 0; i < image_width; i++) {
                 auto pixel_color = color(0, 0, 0);
                 
