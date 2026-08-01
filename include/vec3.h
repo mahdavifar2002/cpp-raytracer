@@ -146,4 +146,25 @@ inline vec3 refract(const vec3& uv, const vec3& n, double etai_over_etat) {
     return r_out_prep + r_out_parallel;
 }
 
+inline vec3 rotate_vec(const vec3& v, double sin_theta, double cos_theta, int axis) {
+    switch(axis) {
+        case 0: // rotate_x
+            return vec3(v.x(),
+                        cos_theta * v.y() - sin_theta * v.z(),
+                        sin_theta * v.y() + cos_theta * v.z());
+        case 1: // rotate_y
+            return vec3(cos_theta * v.x() + sin_theta * v.z(),
+                        v.y(),
+                       -sin_theta * v.x() + cos_theta * v.z());
+        case 2: // rotate_z
+            return vec3(cos_theta * v.x() - sin_theta * v.y(),
+                        sin_theta * v.x() + cos_theta * v.y(),
+                        v.z());
+        default:
+            return vec3(v.x(),
+                        v.y(),
+                        v.z());
+    }
+}
+
 #endif

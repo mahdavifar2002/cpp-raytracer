@@ -65,4 +65,77 @@ class translate : public hittable {
     aabb bbox;
 };
 
+class rotate : public hittable {
+  public:
+    rotate(shared_ptr<hittable> object, double angle, int axis)
+      : object(object), axis(axis)
+    {
+        auto radians = degrees_to_radians(angle);
+        sin_theta = std::sin(radians);
+        cos_theta = std::cos(radians);
+
+        // Set bouding box
+
+        bbox = object->bounding_box();
+        point3 min( infinity,  infinity,  infinity);
+        point3 max(-infinity, -infinity, -infinity);
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 2; k++) {
+                    auto corner = point3(i*bbox.x.max + (1-i)*bbox.x.min,
+                                         j*bbox.y.max + (1-j)*bbox.y.min,
+                                         k*bbox.z.max + (1-k)*bbox.z.min);
+                    
+                    auto rotated_corner = rotate_vec(corner, sin_theta, cos_theta, axis);
+
+                    for (int c = 0; c < 3; c++) {
+                        min[c] = std::fmin(min[c], rotated_corner[c]);
+                        max[c] = std::fmax(max[c], rotated_corner[c]);
+                    }
+                }
+            }
+        }
+
+        bbox = aabb(min, max);
+    }
+
+    bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
+
+        // Transform the ray from world space to object space.
+
+        auto origin = rotate_vec(r.origin(), -sin_theta, cos_theta, axis);
+        auto direction = rotate_vec(r.direction(), -sin_theta, cos_theta, axis);
+        
+        ray rotated_r(origin, direction, r.time());
+
+        // Determine whether an intersection exists in object space (and if so, where).
+        if (!object->hit(rotated_r, ray_t, rec))
+            return false;
+        
+        // Transform the intersection from object space back to world space.
+
+        rec.p = rotate_vec(rec.p, sin_theta, cos_theta, axis);
+        rec.normal = rotate_vec(rec.normal, sin_theta, cos_theta, axis);
+
+        return true;
+    }
+
+    aabb bounding_box() const override {
+        return bbox;
+    }
+
+  private:
+    shared_ptr<hittable> object;
+    double sin_theta;
+    double cos_theta;
+    int axis;
+    aabb bbox;
+};
+
+class rotate_y : public rotate {
+  public:
+    rotate_y(shared_ptr<hittable> object, double angle) : rotate(object, angle, 1) {}
+};
+
 #endif
