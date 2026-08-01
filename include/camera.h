@@ -11,7 +11,7 @@ class camera {
   public:
     double aspect_ratio     = 1.0; // Ration of image width over height 
     int    image_width      = 100; // Rendered image width in pixel count
-    int    sample_per_pixel = 10;  // Count of random samples for each pixel
+    int    samples_per_pixel = 10;  // Count of random samples for each pixel
     int    max_depth        = 10;  // Maximum number of ray bounces into scene
     color  background;             // Scene background color
 
@@ -37,7 +37,7 @@ class camera {
             for (int i = 0; i < image_width; i++) {
                 auto pixel_color = color(0, 0, 0);
                 
-                for (int sample = 0; sample < sample_per_pixel; sample++) {
+                for (int sample = 0; sample < samples_per_pixel; sample++) {
                     ray r = get_ray(i, j);
                     pixel_color += ray_color(r, max_depth, world);
                 }
@@ -78,7 +78,7 @@ class camera {
         image_height = (image_height < 1) ? 1 : image_height;
 
         // Calulate the inverse value once for the pixel sample count.
-        pixel_samples_scale = 1.0 / sample_per_pixel;
+        pixel_samples_scale = 1.0 / samples_per_pixel;
 
         center = lookfrom;
 
