@@ -13,6 +13,12 @@
 #include <iostream>
 #include <cstdlib>
 
+// Default argument values
+int scene = 9;
+int width = 400;
+int samples = 50;
+int depth = 40;
+
 void bouncing_spheres() {
     hittable_list world;
 
@@ -69,11 +75,11 @@ void bouncing_spheres() {
 
     camera cam;
 
-    cam.aspect_ratio     = 16.0 / 9.0;
-    cam.image_width      = 400;
-    cam.samples_per_pixel = 100;
-    cam.max_depth        = 50;
-    cam.background       = color(0.70, 0.80, 1.00);
+    cam.aspect_ratio      = 16.0 / 9.0;
+    cam.image_width       = width;
+    cam.samples_per_pixel = samples;
+    cam.max_depth         = depth;
+    cam.background        = color(0.70, 0.80, 1.00);
 
     cam.vfov = 20;
     cam.lookfrom = point3(13, 2, 3);
@@ -96,11 +102,11 @@ void checkered_spheres() {
 
     camera cam;
 
-    cam.aspect_ratio     = 16.0 / 9.0;
-    cam.image_width      = 400;
-    cam.samples_per_pixel = 100;
-    cam.max_depth        = 50;
-    cam.background       = color(0.70, 0.80, 1.00);
+    cam.aspect_ratio      = 16.0 / 9.0;
+    cam.image_width       = width;
+    cam.samples_per_pixel = samples;
+    cam.max_depth         = depth;
+    cam.background        = color(0.70, 0.80, 1.00);
 
     cam.vfov = 20;
     cam.lookfrom = point3(13, 2, 3);
@@ -119,11 +125,11 @@ void earth() {
 
     camera cam;
 
-    cam.aspect_ratio     = 16.0 / 9.0;
-    cam.image_width      = 400;
-    cam.samples_per_pixel = 100;
-    cam.max_depth        = 50;
-    cam.background       = color(0.70, 0.80, 1.00);
+    cam.aspect_ratio      = 16.0 / 9.0;
+    cam.image_width       = width;
+    cam.samples_per_pixel = samples;
+    cam.max_depth         = depth;
+    cam.background        = color(0.70, 0.80, 1.00);
 
     cam.vfov = 20;
     cam.lookfrom = point3(0, 0, 12);
@@ -138,17 +144,17 @@ void earth() {
 void perlin_spheres() {
     hittable_list world;
 
-    auto pertext = make_shared<noise_texture>(4);
+    auto pertext = make_shared<noise_texture>(1);
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
     world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
 
     camera cam;
 
-    cam.aspect_ratio     = 16.0 / 9.0;
-    cam.image_width      = 400;
-    cam.samples_per_pixel = 100;
-    cam.max_depth        = 50;
-    cam.background       = color(0.70, 0.80, 1.00);
+    cam.aspect_ratio      = 16.0 / 9.0;
+    cam.image_width       = width;
+    cam.samples_per_pixel = samples;
+    cam.max_depth         = depth;
+    cam.background        = color(0.70, 0.80, 1.00);
 
     cam.vfov = 20;
     cam.lookfrom = point3(13, 2, 3);
@@ -182,11 +188,11 @@ void quads() {
     // Camera
     camera cam;
 
-    cam.aspect_ratio     = 1.0;
-    cam.image_width      = 400;
-    cam.samples_per_pixel = 100;
-    cam.max_depth        = 50;
-    cam.background       = color(0.70, 0.80, 1.00);
+    cam.aspect_ratio      = 1.0;
+    cam.image_width       = width;
+    cam.samples_per_pixel = samples;
+    cam.max_depth         = depth;
+    cam.background        = color(0.70, 0.80, 1.00);
 
     cam.vfov = 80;
     cam.lookfrom = point3(0, 0, 9);
@@ -201,7 +207,7 @@ void quads() {
 void simple_light() {
     hittable_list world;
 
-    auto pertext = make_shared<noise_texture>(4);
+    auto pertext = make_shared<noise_texture>(1);
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
     world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
 
@@ -211,10 +217,10 @@ void simple_light() {
 
     camera cam;
 
-    cam.aspect_ratio     = 16.0 / 9.0;
-    cam.image_width      = 400;
-    cam.samples_per_pixel = 100;
-    cam.max_depth        = 50;
+    cam.aspect_ratio      = 16.0 / 9.0;
+    cam.image_width       = width;
+    cam.samples_per_pixel = samples;
+    cam.max_depth         = depth;
 
     cam.vfov = 20;
     cam.lookfrom = point3(26, 3, 6);
@@ -256,11 +262,11 @@ void cornell_box() {
     // Camera
     camera cam;
 
-    cam.aspect_ratio     = 1.0;
-    cam.image_width      = 600;
-    cam.samples_per_pixel = 200;
-    cam.max_depth        = 50;
-    cam.background       = color(0, 0, 0);
+    cam.aspect_ratio      = 1.0;
+    cam.image_width       = width;
+    cam.samples_per_pixel = samples;
+    cam.max_depth         = depth;
+    cam.background        = color(0, 0, 0);
 
     cam.vfov = 40;
     cam.lookfrom = point3(278, 278, -800);
@@ -303,11 +309,11 @@ void cornell_smoke() {
     // Camera
     camera cam;
 
-    cam.aspect_ratio     = 1.0;
-    cam.image_width      = 600;
-    cam.samples_per_pixel = 200;
-    cam.max_depth        = 50;
-    cam.background       = color(0, 0, 0);
+    cam.aspect_ratio      = 1.0;
+    cam.image_width       = width;
+    cam.samples_per_pixel = samples;
+    cam.max_depth         = depth;
+    cam.background        = color(0, 0, 0);
 
     cam.vfov = 40;
     cam.lookfrom = point3(278, 278, -800);
@@ -319,7 +325,7 @@ void cornell_smoke() {
     cam.render(world);
 }
 
-void final_scene(int image_width, int samples_per_pixel, int max_depth) {
+void final_scene() {
 
     hittable_list boxes;
     auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
@@ -371,7 +377,7 @@ void final_scene(int image_width, int samples_per_pixel, int max_depth) {
     world.add(make_shared<sphere>(point3(400, 200, 400), 100, earth_material));
 
     // Perlin noise sphere
-    auto perlin_texture = make_shared<noise_texture>(80);
+    auto perlin_texture = make_shared<noise_texture>(20);
     world.add(make_shared<sphere>(point3(220, 280, 300), 80, make_shared<lambertian>(perlin_texture)));
     
     // Overlaping small spheres
@@ -398,11 +404,11 @@ void final_scene(int image_width, int samples_per_pixel, int max_depth) {
 
     camera cam;
 
-    cam.aspect_ratio = 1.0;
-    cam.image_width = image_width;
-    cam.samples_per_pixel = samples_per_pixel;
-    cam.max_depth = max_depth;
-    cam.background = color(0, 0, 0);
+    cam.aspect_ratio      = 1.0;
+    cam.image_width       = width;
+    cam.samples_per_pixel = samples;
+    cam.max_depth         = depth;
+    cam.background        = color(0, 0, 0);
 
     cam.vfov = 40;
     cam.lookfrom = point3(478, 278, -600);
@@ -414,17 +420,40 @@ void final_scene(int image_width, int samples_per_pixel, int max_depth) {
     cam.render(world);
 }
 
-int main() {
-    switch (10) {
-        case 1:  bouncing_spheres();            break;
-        case 2:  checkered_spheres();           break;
-        case 3:  earth();                       break;
-        case 4:  perlin_spheres();              break;
-        case 5:  quads();                       break;
-        case 6:  simple_light();                break;
-        case 7:  cornell_box();                 break;
-        case 8:  cornell_smoke();               break;
-        case 9:  final_scene(1080, 10000, 40);  break;
-        default: final_scene(1080,   100, 40);  break;
+int main(int argc, char* argv[]) {
+    // Loop through the terminal arguments
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        
+        if ((arg == "-c" || arg == "--scene") && i + 1 < argc) {
+            width = std::stoi(argv[++i]);
+        } else if ((arg == "-w" || arg == "--width") && i + 1 < argc) {
+            width = std::stoi(argv[++i]);
+        } else if ((arg == "-s" || arg == "--samples") && i + 1 < argc) {
+            samples = std::stoi(argv[++i]);
+        } else if ((arg == "-d" || arg == "--depth") && i + 1 < argc) {
+            depth = std::stoi(argv[++i]);
+        } else {
+            std::cerr << "Usage: " << argv[0] << " [-c -scene] [-w width] [-s samples] [-d depth]\n";
+            return 1; // Exit with error code if they pass a bad flag
+        }
+    }
+
+    std::cerr << "Rendering scene '" << scene
+              << "' with Width: " << width 
+              << ", Samples: " << samples 
+              << ", Depth: " << depth << "\n";
+    
+    switch (scene) {
+        case 1:  bouncing_spheres();  break;
+        case 2:  checkered_spheres(); break;
+        case 3:  earth();             break;
+        case 4:  perlin_spheres();    break;
+        case 5:  quads();             break;
+        case 6:  simple_light();      break;
+        case 7:  cornell_box();       break;
+        case 8:  cornell_smoke();     break;
+        case 9:  final_scene();       break;
+        default: final_scene();       break;
     }
 }
