@@ -31,7 +31,7 @@ The project uses the [`aminnj/cpptqdm`](https://github.com/aminnj/cpptqdm) heade
 From inside the `build` directory, run the following one-liner to compile, execute the render, measure the elapsed time in seconds, and automatically open the resulting image:
 
 ```bash
-cmake --build . && ./RayTracer > image.ppm && xdg-open image.ppm
+cmake --build . && ./RayTracer --width 480 --samples 100 --output image.ppm && xdg-open image.ppm
 ```
 
 ## Project Structure

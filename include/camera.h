@@ -23,11 +23,14 @@ class camera {
     double defocus_angle = 0; // Variation angle of rays through each pixel
     double focus_dist = 10;   // Distance from camera lookfrom point to plane of perfect focus
 
-    void render(const hittable& world) {
+    void render(const hittable& world, const std::string filename) {
         initialize();
 
-        std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-        
+        // row_shuffle_render(world, filename);
+        progressive_render(world, filename);
+    }
+
+    void row_shuffle_render(const hittable& world, const std::string filename) {        
         std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width));
 
         // Create and shuffle scanline indices
@@ -42,7 +45,7 @@ class camera {
         #pragma omp parallel for schedule(dynamic)
         for (int k = 0; k < image_height; k++) {
             int j = line_indices[k]; // Grab a shuffled row index
-            
+
             for (int i = 0; i < image_width; i++) {
                 auto pixel_color = color(0, 0, 0);
                 
@@ -51,10 +54,10 @@ class camera {
                     pixel_color += ray_color(r, max_depth, world);
                 }
 
-                image[j][i] = pixel_samples_scale * pixel_color;
+                image[j][i] = pixel_color;
             }
 
-            # pragma omp critical
+            #pragma omp critical
             {
                 bar.progress(lines_completed, image_height);
                 lines_completed++;
@@ -63,11 +66,33 @@ class camera {
 
         bar.finish();
 
-        for (int j = 0; j < image_height; j++) {
-            for (int i = 0; i < image_width; i++) {
-                write_color(std::cout, image[j][i]);
+        save_image(image, samples_per_pixel, filename);
+    }
+
+    void progressive_render(const hittable& world, const std::string filename) {
+        std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width));
+
+        int lines_completed = 0;
+        tqdm bar;
+
+        for (int s = 1; s <= samples_per_pixel; s++) {
+            #pragma omp parallel for schedule(dynamic)
+            for (int j = 0; j < image_height; j++) {
+                auto pixel_color = color(0, 0, 0);
+
+                for (int i = 0; i < image_width; i++) {
+                    ray r = get_ray(i, j);
+                    image[j][i] += ray_color(r, max_depth, world);
+                }
             }
+
+            bar.progress(s, samples_per_pixel);
+
+            if (s == 1 || s == 2 || s == 5 || s == 10 || s == 20 || s % 50 == 0 || s == samples_per_pixel)
+                save_image(image, s, filename);
         }
+
+        bar.finish();
     }
 
   private:
@@ -172,6 +197,27 @@ class camera {
         color color_from_scatter = attenuation * ray_color(scattered, depth - 1, world);
         
         return color_from_emission + color_from_scatter;
+    }
+
+    void save_image(const std::vector<std::vector<color>>& image, int current_samples, const std::string filename) {
+        std::ofstream out(filename);
+
+        if (!out) {
+            std::cerr << "\nError: Could not open file '"<< filename << "' for writing. \n";
+            return;
+        }
+
+        out << "P3\n";
+        out << "# Samples per pixel = " << current_samples << "\n";
+        out << image_width << ' ' << image_height << "\n255\n";
+
+        double current_scale = 1.0 / current_samples;
+
+        for (int j = 0; j < image_height; j++) {
+            for (int i = 0; i < image_width; i++) {
+                write_color(out, current_scale * image[j][i]);
+            }
+        }
     }
 };
 

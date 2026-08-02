@@ -18,6 +18,7 @@ int scene = 9;
 int width = 400;
 int samples = 50;
 int depth = 40;
+std::string filename = "image.ppm";
 
 void bouncing_spheres() {
     hittable_list world;
@@ -89,7 +90,7 @@ void bouncing_spheres() {
     cam.defocus_angle = 0.6;
     cam.focus_dist = 10;
 
-    cam.render(world);
+    cam.render(world, filename);
 }
 
 void checkered_spheres() {
@@ -115,7 +116,7 @@ void checkered_spheres() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world);
+    cam.render(world, filename);
 }
 
 void earth() {
@@ -138,7 +139,7 @@ void earth() {
 
     cam.defocus_angle = 0;
 
-    cam.render(hittable_list(globe));
+    cam.render(hittable_list(globe), filename);
 }
 
 void perlin_spheres() {
@@ -163,7 +164,7 @@ void perlin_spheres() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world);
+    cam.render(world, filename);
 }
 
 void quads() {
@@ -201,7 +202,7 @@ void quads() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world);
+    cam.render(world, filename);
 }
 
 void simple_light() {
@@ -229,7 +230,7 @@ void simple_light() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world);
+    cam.render(world, filename);
 }
 
 void cornell_box() {
@@ -275,7 +276,7 @@ void cornell_box() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world);
+    cam.render(world, filename);
 }
 
 void cornell_smoke() {
@@ -322,7 +323,7 @@ void cornell_smoke() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world);
+    cam.render(world, filename);
 }
 
 void final_scene() {
@@ -417,7 +418,7 @@ void final_scene() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world);
+    cam.render(world, filename);
 }
 
 int main(int argc, char* argv[]) {
@@ -426,15 +427,17 @@ int main(int argc, char* argv[]) {
         std::string arg = argv[i];
         
         if ((arg == "-c" || arg == "--scene") && i + 1 < argc) {
-            width = std::stoi(argv[++i]);
+            scene = std::stoi(argv[++i]);
         } else if ((arg == "-w" || arg == "--width") && i + 1 < argc) {
             width = std::stoi(argv[++i]);
         } else if ((arg == "-s" || arg == "--samples") && i + 1 < argc) {
             samples = std::stoi(argv[++i]);
         } else if ((arg == "-d" || arg == "--depth") && i + 1 < argc) {
             depth = std::stoi(argv[++i]);
+        } else if ((arg == "-o" || arg == "--output") && i + 1 < argc) {
+            filename = argv[++i];
         } else {
-            std::cerr << "Usage: " << argv[0] << " [-c -scene] [-w width] [-s samples] [-d depth]\n";
+            std::cerr << "Usage: " << argv[0] << " [-c -scene] [-w width] [-s samples] [-d depth] [-o output]\n";
             return 1; // Exit with error code if they pass a bad flag
         }
     }
