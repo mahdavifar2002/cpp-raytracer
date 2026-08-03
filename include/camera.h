@@ -3,17 +3,18 @@
 
 #include <vector>
 
+#include "sphere.h"
 #include "hittable_list.h"
 #include "material.h"
 #include "tqdm.h"
 
 class camera {
   public:
-    double aspect_ratio     = 1.0; // Ration of image width over height 
-    int    image_width      = 100; // Rendered image width in pixel count
-    int    samples_per_pixel = 10;  // Count of random samples for each pixel
-    int    max_depth        = 10;  // Maximum number of ray bounces into scene
-    color  background;             // Scene background color
+    double  aspect_ratio      = 1.0; // Ration of image width over height 
+    int     image_width       = 100; // Rendered image width in pixel count
+    int     samples_per_pixel = 10;  // Count of random samples for each pixel
+    int     max_depth         = 10;  // Maximum number of ray bounces into scene
+    shared_ptr<texture> background = make_shared<solid_color>(color(0, 0, 0));
 
     double vfov     = 90;               // Vertical view angle (field of view)
     point3 lookfrom = point3(0, 0, 0);  // Point camera is looking from
@@ -179,7 +180,9 @@ class camera {
         hit_record rec;
 
         if (!world.hit(r, interval(0.001, infinity), rec)) {
-            return background;
+            double u, v;
+            sphere::get_sphere_uv(unit_vector(r.direction()), u, v);
+            return background->value(u, v, r.direction());
 
             // // Old gradient sky code
             // vec3 unit_direction = unit_vector(r.direction());

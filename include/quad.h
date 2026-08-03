@@ -3,6 +3,7 @@
 
 #include "hittable.h"
 #include "hittable_list.h"
+#include "rtw_obj_loader.h"
 
 class quad : public hittable {
   public:
@@ -125,6 +126,21 @@ class tri : public quad {
         return quad::is_interior(a, b, rec);
     }
 };
+
+inline shared_ptr<bvh_node> mesh(const char* filename, shared_ptr<material> mat, double scale = 1) {
+    auto obj = rtw_obj(filename);
+
+    hittable_list faces;
+    
+    for (const auto& face : obj.faces) {
+        faces.add(make_shared<tri>(scale * face.vertices[0],
+                                    scale * (face.vertices[1] - face.vertices[0]),
+                                    scale * (face.vertices[2] - face.vertices[0]),
+                                    mat));        
+    }
+
+    return make_shared<bvh_node>(faces);
+}
 
 class ellipse : public quad {
   public:

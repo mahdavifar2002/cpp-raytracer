@@ -133,9 +133,19 @@ class rotate : public hittable {
     aabb bbox;
 };
 
+class rotate_x : public rotate {
+  public:
+    rotate_x(shared_ptr<hittable> object, double angle) : rotate(object, angle, 0) {}
+};
+
 class rotate_y : public rotate {
   public:
     rotate_y(shared_ptr<hittable> object, double angle) : rotate(object, angle, 1) {}
+};
+
+class rotate_z : public rotate {
+  public:
+    rotate_z(shared_ptr<hittable> object, double angle) : rotate(object, angle, 2) {}
 };
 
 #endif

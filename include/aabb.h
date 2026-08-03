@@ -32,6 +32,14 @@ class aabb {
         z = interval(box1.z, box2.z);
     }
 
+    point3 min() {
+        return point3(x.min, y.min, z.min);
+    }
+
+    point3 max() {
+        return point3(x.max, y.max, z.max);
+    }
+
     const interval& axis_interval(int n) const {
         if (n == 1) return y;
         if (n == 2) return z;

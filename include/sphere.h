@@ -57,12 +57,6 @@ class sphere : public hittable {
 
     aabb bounding_box() const override { return bbox; }
 
-  private:
-    ray center;
-    double radius;
-    shared_ptr<material> mat;
-    aabb bbox;
-    
     static void get_sphere_uv(const point3& p, double& u, double& v) {
         // p: a given point on the sphere of radius one, centered at the origin.
         // u: returned value [0,1] of angle around the Y axis from -X. 
@@ -77,6 +71,12 @@ class sphere : public hittable {
         u = phi / (2*pi);
         v = theta / pi;
     }
+
+  private:
+    ray center;
+    double radius;
+    shared_ptr<material> mat;
+    aabb bbox;
 };
 
 #endif

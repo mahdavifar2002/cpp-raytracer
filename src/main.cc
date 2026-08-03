@@ -18,7 +18,7 @@ int scene = 9;
 int width = 400;
 int samples = 50;
 int depth = 40;
-std::string filename = "image.ppm";
+std::string output = "image.ppm";
 
 void bouncing_spheres() {
     hittable_list world;
@@ -80,7 +80,7 @@ void bouncing_spheres() {
     cam.image_width       = width;
     cam.samples_per_pixel = samples;
     cam.max_depth         = depth;
-    cam.background        = color(0.70, 0.80, 1.00);
+    cam.background        = make_shared<solid_color>(color(0.70, 0.80, 1.00));
 
     cam.vfov = 20;
     cam.lookfrom = point3(13, 2, 3);
@@ -90,7 +90,7 @@ void bouncing_spheres() {
     cam.defocus_angle = 0.6;
     cam.focus_dist = 10;
 
-    cam.render(world, filename);
+    cam.render(world, output);
 }
 
 void checkered_spheres() {
@@ -107,7 +107,7 @@ void checkered_spheres() {
     cam.image_width       = width;
     cam.samples_per_pixel = samples;
     cam.max_depth         = depth;
-    cam.background        = color(0.70, 0.80, 1.00);
+    cam.background        = make_shared<solid_color>(color(0.70, 0.80, 1.00));
 
     cam.vfov = 20;
     cam.lookfrom = point3(13, 2, 3);
@@ -116,7 +116,7 @@ void checkered_spheres() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world, filename);
+    cam.render(world, output);
 }
 
 void earth() {
@@ -130,7 +130,7 @@ void earth() {
     cam.image_width       = width;
     cam.samples_per_pixel = samples;
     cam.max_depth         = depth;
-    cam.background        = color(0.70, 0.80, 1.00);
+    cam.background        = make_shared<solid_color>(color(0.70, 0.80, 1.00));
 
     cam.vfov = 20;
     cam.lookfrom = point3(0, 0, 12);
@@ -139,7 +139,7 @@ void earth() {
 
     cam.defocus_angle = 0;
 
-    cam.render(hittable_list(globe), filename);
+    cam.render(hittable_list(globe), output);
 }
 
 void perlin_spheres() {
@@ -155,7 +155,7 @@ void perlin_spheres() {
     cam.image_width       = width;
     cam.samples_per_pixel = samples;
     cam.max_depth         = depth;
-    cam.background        = color(0.70, 0.80, 1.00);
+    cam.background        = make_shared<solid_color>(color(0.70, 0.80, 1.00));
 
     cam.vfov = 20;
     cam.lookfrom = point3(13, 2, 3);
@@ -164,7 +164,7 @@ void perlin_spheres() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world, filename);
+    cam.render(world, output);
 }
 
 void quads() {
@@ -193,7 +193,7 @@ void quads() {
     cam.image_width       = width;
     cam.samples_per_pixel = samples;
     cam.max_depth         = depth;
-    cam.background        = color(0.70, 0.80, 1.00);
+    cam.background        = make_shared<solid_color>(color(0.70, 0.80, 1.00));
 
     cam.vfov = 80;
     cam.lookfrom = point3(0, 0, 9);
@@ -202,7 +202,7 @@ void quads() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world, filename);
+    cam.render(world, output);
 }
 
 void simple_light() {
@@ -230,7 +230,7 @@ void simple_light() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world, filename);
+    cam.render(world, output);
 }
 
 void cornell_box() {
@@ -267,7 +267,7 @@ void cornell_box() {
     cam.image_width       = width;
     cam.samples_per_pixel = samples;
     cam.max_depth         = depth;
-    cam.background        = color(0, 0, 0);
+    cam.background        = make_shared<solid_color>(color(0, 0, 0));
 
     cam.vfov = 40;
     cam.lookfrom = point3(278, 278, -800);
@@ -276,7 +276,7 @@ void cornell_box() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world, filename);
+    cam.render(world, output);
 }
 
 void cornell_smoke() {
@@ -314,7 +314,7 @@ void cornell_smoke() {
     cam.image_width       = width;
     cam.samples_per_pixel = samples;
     cam.max_depth         = depth;
-    cam.background        = color(0, 0, 0);
+    cam.background        = make_shared<solid_color>(color(0, 0, 0));
 
     cam.vfov = 40;
     cam.lookfrom = point3(278, 278, -800);
@@ -323,7 +323,7 @@ void cornell_smoke() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world, filename);
+    cam.render(world, output);
 }
 
 void final_scene() {
@@ -409,7 +409,7 @@ void final_scene() {
     cam.image_width       = width;
     cam.samples_per_pixel = samples;
     cam.max_depth         = depth;
-    cam.background        = color(0, 0, 0);
+    cam.background        = make_shared<solid_color>(color(0, 0, 0));
 
     cam.vfov = 40;
     cam.lookfrom = point3(478, 278, -600);
@@ -418,7 +418,59 @@ void final_scene() {
 
     cam.defocus_angle = 0;
 
-    cam.render(world, filename);
+    cam.render(world, output);
+}
+
+void bunny() {
+    hittable_list world;
+
+    // auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+    // world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
+
+
+    auto difflight = make_shared<diffuse_light>(color(8.3, 8, 8));
+    world.add(make_shared<quad>(point3(-2, 0, -1), vec3(0, 0, 2), vec3(0, 2, 0), difflight));
+
+    auto ground_material = make_shared<lambertian>(make_shared<image_texture>("table.jpg"));
+    world.add(make_shared<quad>(point3(-5, 0, -10), vec3(0, 0, 20), vec3(10, 0, 0), ground_material));
+
+    auto material1 = make_shared<dielectric>(1.5);
+    // world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
+
+    auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
+    // world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
+
+    auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
+    // world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
+
+    shared_ptr<hittable> bunny = mesh("bunny.obj", material1, 0.02);
+    bunny = make_shared<rotate>(bunny, -90, 0);
+    // bunny = make_shared<rotate>(bunny, 70, 1);
+    bunny = make_shared<translate>(bunny,vec3(-1.0, 0.0, -1.0) - bunny->bounding_box().min());
+
+    world.add(bunny);
+    // world.add(make_shared<constant_medium>(bunny, 4, color(0.2, 0.4, 0.9)));
+
+    world = hittable_list(make_shared<bvh_node>(world));
+
+    camera cam;
+
+    cam.aspect_ratio      = 16.0 / 9.0;
+    cam.image_width       = width;
+    cam.samples_per_pixel = samples;
+    cam.max_depth         = depth;
+    cam.background        = make_shared<solid_color>(color(0, 0, 0));
+    // cam.background        = make_shared<image_texture>("hdri.jpg");
+
+    cam.vfov = 20;
+    cam.lookfrom = point3(0, 2, 10);
+    cam.lookat = point3(0, 1, 0);
+    cam.vup = vec3(0, 1, 0);
+
+    cam.defocus_angle = 0.6;
+    cam.focus_dist = 10;
+
+    cam.render(world, output);
 }
 
 int main(int argc, char* argv[]) {
@@ -435,7 +487,7 @@ int main(int argc, char* argv[]) {
         } else if ((arg == "-d" || arg == "--depth") && i + 1 < argc) {
             depth = std::stoi(argv[++i]);
         } else if ((arg == "-o" || arg == "--output") && i + 1 < argc) {
-            filename = argv[++i];
+            output = argv[++i];
         } else {
             std::cerr << "Usage: " << argv[0] << " [-c -scene] [-w width] [-s samples] [-d depth] [-o output]\n";
             return 1; // Exit with error code if they pass a bad flag
@@ -448,15 +500,16 @@ int main(int argc, char* argv[]) {
               << ", Depth: " << depth << "\n";
     
     switch (scene) {
-        case 1:  bouncing_spheres();  break;
-        case 2:  checkered_spheres(); break;
-        case 3:  earth();             break;
-        case 4:  perlin_spheres();    break;
-        case 5:  quads();             break;
-        case 6:  simple_light();      break;
-        case 7:  cornell_box();       break;
-        case 8:  cornell_smoke();     break;
-        case 9:  final_scene();       break;
+        case  1: bouncing_spheres();  break;
+        case  2: checkered_spheres(); break;
+        case  3: earth();             break;
+        case  4: perlin_spheres();    break;
+        case  5: quads();             break;
+        case  6: simple_light();      break;
+        case  7: cornell_box();       break;
+        case  8: cornell_smoke();     break;
+        case  9: final_scene();       break;
+        case 10: bunny();             break;
         default: final_scene();       break;
     }
 }
