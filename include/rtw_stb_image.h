@@ -18,7 +18,7 @@ class rtw_image {
     // width() and height() will return 0. 
     rtw_image(const char* image_filename) {
         auto filename = std::string(image_filename);
-        auto image_dir = getenv("RTW_IMAGE");
+        auto image_dir = getenv("RTW_IMAGES");
 
         // Hunt for the image file in some likely locations.
         if (image_dir && load(std::string(image_dir) + "/" + image_filename)) return;
