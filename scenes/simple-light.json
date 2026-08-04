@@ -1,0 +1,41 @@
+{
+  "camera": {
+    "aspect_ratio": 1.7777,
+    "image_width": 1920,
+    "samples_per_pixel": 200,
+    "max_depth": 50,
+    "vfov": 20,
+    "lookfrom": [26, 3, 6],
+    "lookat": [0, 2, 0],
+    "vup": [0, 1, 0],
+    "defocus_angle": 0
+  },
+  "world": [
+    {
+      "type": "sphere",
+      "center": [0, 7, 0], "radius": 2,
+      "material": { "type": "diffuse_light", "emit": [4.0, 4.0, 4.0] }
+    },
+    {
+      "type": "quad",
+      "Q": [3, 1, -2], "u": [2, 0, 0], "v": [0, 2, 0],
+      "material": { "type": "diffuse_light", "emit": [4.0, 4.0, 4.0] }
+    },
+    {
+      "type": "sphere",
+      "center": [0, -1000, 0], "radius": 1000,
+      "material": {
+        "type": "lambertian",
+        "texture": { "type": "noise", "scale": 1.0 }
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [0, 2, 0], "radius": 2,
+      "material": {
+        "type": "lambertian",
+        "texture": { "type": "noise", "scale": 1.0 }
+      }
+    }
+  ]
+}

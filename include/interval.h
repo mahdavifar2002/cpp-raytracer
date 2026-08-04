@@ -1,7 +1,7 @@
 #ifndef INTERVAL_H
 #define INTERVAL_H
 
-#include "rtweekend.h"
+#include <limits>
 
 class interval {
   public:
@@ -40,11 +40,13 @@ class interval {
         return interval(min - padding, max + padding);
     }
 
+    static const double infinity;
     static const interval empty, universe;
 };
 
-inline const interval interval::empty    = interval(+infinity, -infinity);
-inline const interval interval::universe = interval(-infinity, +infinity);
+inline const double interval::infinity   = std::numeric_limits<double>::infinity();
+inline const interval interval::empty    = interval(+interval::infinity, -interval::infinity);
+inline const interval interval::universe = interval(-interval::infinity, +interval::infinity);
 
 inline interval operator+(const interval& ival, double displacement) {
     return interval(ival.min + displacement, ival.max + displacement);

@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include <vector>
+#include <iomanip>
 
 #include "sphere.h"
 #include "hittable_list.h"
@@ -90,7 +91,7 @@ class camera {
             bar.progress(s, samples_per_pixel);
 
             if (s == 1 || s == 2 || s == 5 || s == 10 || s == 20 || s % 50 == 0 || s == samples_per_pixel)
-                save_image(image, s, filename);
+                save_image(image, s, filename, bar.time());
         }
 
         bar.finish();
@@ -202,7 +203,9 @@ class camera {
         return color_from_emission + color_from_scatter;
     }
 
-    void save_image(const std::vector<std::vector<color>>& image, int current_samples, const std::string filename) {
+    void save_image(const std::vector<std::vector<color>>& image, int current_samples,
+                    const std::string filename, double time = -1)
+    {
         std::ofstream out(filename);
 
         if (!out) {
@@ -211,7 +214,10 @@ class camera {
         }
 
         out << "P3\n";
-        out << "# Samples per pixel = " << current_samples << "\n";
+        out << "# Samples per pixel: " << current_samples << "\n";
+        if (time > 0) {
+            out << "# Rendering time:    " << std::fixed << std::setprecision(2) << time << " seconds \n";
+        }
         out << image_width << ' ' << image_height << "\n255\n";
 
         double current_scale = 1.0 / current_samples;

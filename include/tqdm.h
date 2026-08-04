@@ -99,13 +99,13 @@ class tqdm {
 
         void finish() {
             progress(total_,total_);
-            fprintf(stderr, "\n");
-
+            fprintf(stderr, "\n");            
+            fflush(stderr);
+        }
+        double time() {
             auto now = std::chrono::system_clock::now();
             double dt_tot = ((std::chrono::duration<double>)(now - t_first)).count();
-            fprintf(stderr, "Total time: %.2f seconds \n", dt_tot);
-            
-            fflush(stderr);
+            return dt_tot;
         }
         void progress(int curr, int tot) {
             if(is_tty && (curr%period == 0)) {

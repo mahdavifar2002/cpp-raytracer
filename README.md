@@ -42,4 +42,4 @@ cmake --build . && ./RayTracer --width 480 --samples 100 --output image.ppm && x
 * `CMakeLists.txt` - Build system configuration and compiler flags.
 
 ## Rendered scene
-![Final scene by the end of implementing the first book](images/book1-final.png)
+![Final scene by the end of implementing the first book](screenshots/book2-final.png)

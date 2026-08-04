@@ -1,0 +1,55 @@
+{
+  "camera": {
+    "aspect_ratio": 1.7777,
+    "image_width": 1920,
+    "samples_per_pixel": 200,
+    "max_depth": 50,
+    "background": { "type": "image", "filename": "hdri.jpg" },
+    "vfov": 20,
+    "lookfrom": [0, 2, 10],
+    "lookat": [0, 1, 0],
+    "vup": [0, 1, 0],
+    "defocus_angle": 0.6,
+    "focus_dist": 10
+  },
+  "world": [
+    {
+      "type": "quad",
+      "Q": [-2, 0, -1], "u": [0, 0, 2], "v": [0, 2, 0],
+      "material": { "type": "diffuse_light", "emit": [7.0, 7.0, 7.0] }
+    },
+    {
+      "type": "quad",
+      "Q": [-5, 0, -10], "u": [0, 0, 20], "v": [10, 0, 0],
+      "material": {
+        "type": "lambertian",
+        "texture": { "type": "image", "filename": "table.jpg" }
+      }
+    },
+    {
+      "type": "translate",
+      "offset": [1.0, 0.0, 1.0],
+      "object": {
+        "type": "mesh",
+        "filename": "bunny.obj",
+        "scale": 2.0,
+        "material": { "type": "dielectric", "refraction_index": 1.5 }
+      }
+    },
+    {
+      "type": "constant_medium",
+      "density": 2.0,
+      "color": [0.2, 0.4, 0.9],
+      "boundary": {
+        "type": "translate",
+        "offset": [1.0, 0.0, 1.0],
+        "object": {
+          "type": "mesh",
+          "filename": "bunny.obj",
+          "scale": 2.0,
+          "material": { "type": "dielectric", "refraction_index": 1.5 }
+        }
+      }
+    }
+  ]
+}
