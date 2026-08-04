@@ -90,7 +90,7 @@ class camera {
 
             bar.progress(s, samples_per_pixel);
 
-            if (s == 1 || s == 2 || s == 5 || s == 10 || s == 20 || s % 50 == 0 || s == samples_per_pixel)
+            if (s == 1 || s == 2 || s == 5 || s % 10 == 0 || s == samples_per_pixel)
                 save_image(image, s, filename, bar.time());
         }
 
