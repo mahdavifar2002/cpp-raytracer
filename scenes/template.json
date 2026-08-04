@@ -1,0 +1,85 @@
+{
+  "camera": {
+    "aspect_ratio": 1.0,
+    "image_width": 1080,
+    "samples_per_pixel": 200,
+    "max_depth": 50,
+    "vfov": 40,
+    "lookfrom": [1, 1, 1],
+    "lookat": [0, 0, 0],
+    "vup": [0, 1, 0],
+    "defocus_angle": 0.5,
+    "focus_dist": 10
+  },
+
+  "texture": { "type": "solid", "color": [0, 0, 0] },
+  "texture": { "type": "checker", "even": { }, "odd": { } },
+  "texture": { "type": "checker", "c1": [0, 0, 0], "c2": [1, 1, 1] },
+  "texture": { "type": "image", "filename": "table.jpg" },
+  "texture": { "type": "noise", "scale": 1 },
+
+  "material": { "type": "lambertian", "albedo": [0, 0, 0] },
+  "material": { "type": "lambertian", "texture": { } },
+  "material": { "type": "metal", "albedo": [0, 0, 0], "fuzz": 0.5 },
+  "material": { "type": "dielectric", "refraction_index": 1.5 },
+  "material": { "type": "diffuse_light", "emit": [7, 7, 7] },
+  
+  "world": [
+    {
+      "type": "sphere",
+      "center": [0, 0, 0], "radius": 10,
+      "material": { }
+    },
+    {
+      "type": "sphere",
+      "center": [0, 0, 0], "center2": [1, 0, 0], "radius": 10,
+      "material": { }
+    },
+    {
+      "type": "quad",
+      "Q": [0, 0, 0], "u": [1, 0, 0], "v": [0, 1, 0],
+      "material": { }
+    },
+    {
+      "type": "box",
+      "a": [0, 0, 0], "b": [1, 1, 1],
+      "material": { }
+    },
+    {
+      "type": "mesh",
+      "filename": "bunny.obj",
+      "scale": 2.0,
+      "material": { }
+    },
+    {
+      "type": "translate",
+      "offset": [0.0, 0.0, 0.0],
+      "object": { }
+    },
+    {
+      "type": "rotate_x",
+      "angle": 90,
+      "object": { }
+    },
+    {
+      "type": "rotate_y",
+      "angle": 90,
+      "object": { }
+    },
+    {
+      "type": "rotate_z",
+      "angle": 90,
+      "object": { }
+    },
+    {
+      "type": "constant_medium",
+      "density": 3,
+      "color": [1, 0, 0],
+      "object": { }
+    },
+    {
+      "type": "bvh_node",
+      "objects": [ ]
+    }
+  ]
+}

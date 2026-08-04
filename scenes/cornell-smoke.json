@@ -45,7 +45,7 @@
       "type": "constant_medium",
       "density": 0.01,
       "color": [0, 0, 0],
-      "boundary": {
+      "object": {
         "type": "translate",
         "offset": [265, 0, 295],
         "object": {
@@ -64,7 +64,7 @@
       "type": "constant_medium",
       "density": 0.01,
       "color": [1, 1, 1],
-      "boundary": {
+      "object": {
         "type": "translate",
         "offset": [130, 0, 65],
         "object": {

@@ -106,7 +106,7 @@ namespace {
         }
         else if (type == "constant_medium") {
             if (j.contains("color")) {
-                return make_shared<constant_medium>(parse_hittable(j["boundary"]), j["density"].get<double>(), parse_color(j["color"]));
+                return make_shared<constant_medium>(parse_hittable(j["object"]), j["density"].get<double>(), parse_color(j["color"]));
             }
         }
         else if (type == "bvh_node") {
