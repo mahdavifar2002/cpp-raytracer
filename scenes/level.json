@@ -1,0 +1,37 @@
+{
+  "camera": {
+    "aspect_ratio": 1.0,
+    "image_width": 1080,
+    "samples_per_pixel": 200,
+    "max_depth": 50,
+    "background_image": { "type": "image", "filename": "hdri.jpg" },
+    "vfov": 40,
+    "lookfrom": [4.75, 2.25, -7],
+    "lookat": [-0.25, 2.25, 0],
+    "vup": [0, 1, 0],
+    "defocus_angle": 0.6,
+    "focus_dist": 8
+  },
+  "world": [
+    {
+      "name": "//--- Light --------------------------------",
+      "type": "quad",
+      "Q": [-2, 4, -1.99], "u": [4, 0, 0], "v": [0, 0, 4],
+      "material": { "type": "diffuse_light", "emit": [3, 3, 3] }
+    },
+    {
+      "name": "//--- OBJ ----------------------------------",
+      "type": "translate",
+      "offset": [0, 0, 0],
+      "object": {
+        "type": "rotate_y",
+        "angle": 90,
+        "object": {
+          "type": "mesh",
+          "filename": "level.obj",
+          "scale": 2.0
+        }
+      }
+    }
+  ]
+}

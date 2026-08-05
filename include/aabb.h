@@ -109,4 +109,10 @@ inline aabb operator+(const vec3& offset, const aabb& bbox) {
     return bbox + offset;
 }
 
+inline std::ostream& operator<<(std::ostream& os, const aabb& bbox) {
+    os << "(" << bbox.x.min << ", " << bbox.y.min << ", " << bbox.z.min << "), "
+       << "(" << bbox.x.max << ", " << bbox.y.max << ", " << bbox.z.max << ")";
+    return os;
+}
+
 #endif

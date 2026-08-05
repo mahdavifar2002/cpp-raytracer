@@ -3,17 +3,21 @@
 
 #include <iostream>
 
+#include "material.h"
+
 class face_t {
   public:
     point3 vertices[3];
     vec3 normals[3];
     double tex_u[3];
     double tex_v[3];
+    int mat_id;
 };
 
 class rtw_obj {
   public:
     std::vector<face_t> faces;
+    std::vector<shared_ptr<material>> materials;
 
     rtw_obj() {}
 

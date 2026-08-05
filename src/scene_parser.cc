@@ -89,8 +89,14 @@ namespace {
             return box(parse_vec3(j["a"]), parse_vec3(j["b"]), parse_material(j["material"]));
         }
         else if (type == "mesh") {
-            // Your tinyobjloader wrapper function
-            return mesh(j["filename"].get<std::string>().c_str(), parse_material(j["material"]), j.value("scale", 1.0));
+            shared_ptr<material> mat_override = nullptr;
+    
+            // Only parse the material if it explicitly exists in the JSON
+            if (j.contains("material")) {
+                mat_override = parse_material(j["material"]);
+            }
+
+            return mesh(j["filename"].get<std::string>().c_str(), mat_override, j.value("scale", 1.0));
         }
         else if (type == "translate") {
             return make_shared<translate>(parse_hittable(j["object"]), parse_vec3(j["offset"]));

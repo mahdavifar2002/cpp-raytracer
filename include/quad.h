@@ -1,6 +1,8 @@
 #ifndef QUAD_H
 #define QUAD_H
 
+#include <iostream>
+
 #include "hittable.h"
 #include "hittable_list.h"
 #include "rtw_obj_loader.h"
@@ -148,22 +150,27 @@ class tri : public quad {
     double uv[3][2];
 };
 
-inline shared_ptr<bvh_node> mesh(const char* filename, shared_ptr<material> mat, double scale = 1) {
+inline shared_ptr<bvh_node> mesh(const char* filename, shared_ptr<material> override_mat = nullptr, double scale = 1) {
     auto obj = rtw_obj(filename);
 
     hittable_list faces;
     
     for (const auto& face : obj.faces) {
+        shared_ptr<material> face_mat = override_mat ? override_mat : obj.materials[face.mat_id];
+
         faces.add(make_shared<tri>(scale * face.vertices[0],
                                     scale * (face.vertices[1] - face.vertices[0]),
                                     scale * (face.vertices[2] - face.vertices[0]),
-                                    mat,
+                                    face_mat,
                                     // Pass the UV coordinates from tinyobjloader
                                     face.tex_u[0], face.tex_v[0],
                                     face.tex_u[1], face.tex_v[1],
                                     face.tex_u[2], face.tex_v[2]
                                 ));        
     }
+
+    std::cerr << "> Object '" << filename << "' loaded into the scene with following bounding box:\n";
+    std::cerr << "> " << faces.bounding_box() << "\n";
 
     return make_shared<bvh_node>(faces);
 }

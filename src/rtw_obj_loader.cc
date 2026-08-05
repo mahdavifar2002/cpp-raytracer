@@ -4,6 +4,52 @@
 #include "rtweekend.h"
 #include "rtw_obj_loader.h"
 
+inline shared_ptr<material> translate_mtl(const tinyobj::material_t& mtl, const std::string& base_dir) {
+    const double EPSILON = 1e-5; // 0.00001
+
+    // 1. Is it a light source? (Check Emissive 'Ke')
+    if (mtl.emission[0] > EPSILON || mtl.emission[1] > EPSILON || mtl.emission[2] > EPSILON) {
+        return make_shared<diffuse_light>(color(mtl.emission[0], mtl.emission[1], mtl.emission[2]));
+    }
+
+    // 2. Is it glass / transparent? (Check Index of Refraction 'Ni' or Dissolve 'd')
+    // Ni = 1.0 is air. Typical glass is ~1.5. 
+    if (mtl.ior > 1.05 || mtl.dissolve < (1.0 - EPSILON)) {
+        // Fallback to 1.5 if IOR isn't explicitly set but dissolve is used
+        double ir = (mtl.ior > 1.0) ? mtl.ior : 1.5; 
+        return make_shared<dielectric>(ir);
+    }
+
+    // 3. Is it metallic? (Check Illumination model or strong Specular 'Ks')
+    // illum == 3 implies reflection. Or if the specular color is very bright.
+    bool is_metal = (mtl.illum == 3) || (mtl.specular[0] > 0.5 && mtl.specular[1] > 0.5 && mtl.specular[2] > 0.5);
+    if (is_metal) {
+        color albedo(mtl.diffuse[0], mtl.diffuse[1], mtl.diffuse[2]);
+        
+        // Convert Specular Exponent 'Ns' (usually 0 to 1000) to 'fuzz' (0.0 to 1.0)
+        // High Ns = smooth/shiny (low fuzz). Low Ns = rough (high fuzz).
+        double fuzz = 1.0;
+        if (mtl.shininess > 0) {
+            fuzz = 1.0 - std::min(1.0, mtl.shininess / 1000.0);
+        }
+        return make_shared<metal>(albedo, fuzz);
+    }
+
+    // 4. Default to Lambertian (Diffuse)
+    if (!mtl.diffuse_texname.empty()) {
+        // It has a texture! Append the base directory to the filename.
+        std::string tex_path = base_dir + mtl.diffuse_texname;
+        
+        // Note: You might want to handle Windows '\' vs Linux '/' path separators 
+        // depending on how your OBJ exporter formatted 'diffuse_texname'
+        return make_shared<lambertian>(make_shared<image_texture>(tex_path.c_str()));
+    } else {
+        // No texture, just a solid color
+        color albedo(mtl.diffuse[0], mtl.diffuse[1], mtl.diffuse[2]);
+        return make_shared<lambertian>(albedo);
+    }
+}
+
 bool rtw_obj::load(const std::string& model_dir, const std::string& filename) {
     tinyobj::ObjReaderConfig reader_config;
     reader_config.mtl_search_path = model_dir; // Path to material files
@@ -20,7 +66,16 @@ bool rtw_obj::load(const std::string& model_dir, const std::string& filename) {
 
     auto &attrib = reader.GetAttrib();
     auto &shapes = reader.GetShapes();
-    auto &materials = reader.GetMaterials();
+    auto &tiny_materials = reader.GetMaterials();
+    
+    // Translate all tinyobj materials to our engine's materials
+    for (const auto& tm : tiny_materials) {
+        materials.push_back(translate_mtl(tm, model_dir));
+    }
+
+    // Add a highly visible "fallback" material at the end of the array 
+    // just in case a face asks for an invalid material ID.
+    materials.push_back(make_shared<lambertian>(color(1, 0, 1))); // Magenta
 
     // Loop over shapes
     for (size_t s = 0; s < shapes.size(); s++) {
@@ -59,12 +114,16 @@ bool rtw_obj::load(const std::string& model_dir, const std::string& filename) {
                     face.tex_v[v] = ty;
                 }
             }
+
+            // Safely grab the material ID for this face
+            int id = shapes[s].mesh.material_ids[f];
+            if (id < 0 || id >= tiny_materials.size()) {
+                id = materials.size() - 1; // Use the magenta fallback
+            }
+            face.mat_id = id;
             
             faces.push_back(face);
             index_offset += fv;
-
-            // per-face material. So far left without usage.
-            int id = shapes[s].mesh.material_ids[f];
         }
     }
 
