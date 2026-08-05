@@ -20,10 +20,20 @@ inline void write_color(std::ostream& out, const color& pixel_color) {
     auto g = pixel_color.y();
     auto b = pixel_color.z();
 
-    // Apply a linear to gamma transformation for gamma 2
+    // Apply a linear to gamma transformation for gamma 2.
     r = linear_to_gamma(r);
     g = linear_to_gamma(g);
     b = linear_to_gamma(b);
+
+    auto max = std::fmax(r, std::fmax(g, b));
+
+    // Adjust and scale RGB if some component is larger than one,
+    // to preserve non-white light source.
+    if (max > 1) {
+        r /= max;
+        b /= max;
+        g /= max;
+    }
 
     // Translate the [0, 1] component values to the byte range [0, 255].
     static const interval internsity(0.000, 0.999);
