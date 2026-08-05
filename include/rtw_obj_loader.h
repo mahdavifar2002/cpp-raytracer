@@ -26,22 +26,21 @@ class rtw_obj {
     // searches for the specified obj file first from the current directory, then in the
     // models/ subdirectory, then the _parent's_ models/ subdirectory, and then _that_
     // parent, and so on, for six levels up.
-    rtw_obj(const char* obj_filename) {
-        auto filename = std::string(obj_filename);
+    rtw_obj(const std::string& directory, const std::string& filename) {
         auto model_dir = getenv("RTW_MODELS");
 
         // Hunt for the model file in some likely locations.
-        if (model_dir && load(std::string(model_dir), obj_filename)) return;
-        if (load("./", filename)) return;
-        if (load("models/", filename)) return;
-        if (load("../models/", filename)) return;
-        if (load("../../models/", filename)) return;
-        if (load("../../../models/", filename)) return;
-        if (load("../../../../models/", filename)) return;
-        if (load("../../../../../models/", filename)) return;
-        if (load("../../../../../../models/", filename)) return;
+        if (model_dir && load(std::string(model_dir) + directory, filename)) return;
+        if (load(directory, filename)) return;
+        if (load("models/" + directory, filename)) return;
+        if (load("../models/" + directory, filename)) return;
+        if (load("../../models/" + directory, filename)) return;
+        if (load("../../../models/" + directory, filename)) return;
+        if (load("../../../../models/" + directory, filename)) return;
+        if (load("../../../../../models/" + directory, filename)) return;
+        if (load("../../../../../../models/" + directory, filename)) return;
 
-        std::cerr << "ERROR: Could not load obj file: '" << obj_filename << "'.\n";
+        std::cerr << "ERROR: Could not load obj file: '" << directory + filename << "'.\n";
     }
 
     // Implementation in the `rtw_obj_loader.cc`

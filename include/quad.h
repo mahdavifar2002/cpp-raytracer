@@ -150,9 +150,20 @@ class tri : public quad {
     double uv[3][2];
 };
 
-inline shared_ptr<bvh_node> mesh(const char* filename, shared_ptr<material> override_mat = nullptr, double scale = 1) {
-    auto obj = rtw_obj(filename);
+// Helper to extract directory from a full filepath (e.g., "models/bunny/file.obj" -> "models/bunny/")
+inline std::string get_base_dir(const std::string& filepath) {
+    size_t pos = filepath.find_last_of("/\\");
+    if (pos != std::string::npos) return filepath.substr(0, pos + 1);
+    return "";
+}
 
+
+inline shared_ptr<bvh_node> mesh(const char* filepath, shared_ptr<material> override_mat = nullptr, double scale = 1) {
+    std::string path_str(filepath);
+    std::string base_dir = get_base_dir(path_str);
+    std::string filename = path_str.substr(base_dir.length());
+
+    auto obj = rtw_obj(base_dir, filename);
     hittable_list faces;
     
     for (const auto& face : obj.faces) {

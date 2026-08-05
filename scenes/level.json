@@ -28,7 +28,7 @@
         "angle": 90,
         "object": {
           "type": "mesh",
-          "filename": "level.obj",
+          "filename": "level/level.obj",
           "scale": 2.0
         }
       }
