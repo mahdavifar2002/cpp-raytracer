@@ -4,14 +4,14 @@
 #include "rtweekend.h"
 #include "rtw_obj_loader.h"
 
-bool rtw_obj::load(const std::string& filename) {
+bool rtw_obj::load(const std::string& model_dir, const std::string& filename) {
     tinyobj::ObjReaderConfig reader_config;
-    reader_config.mtl_search_path = "./"; // Path to material files
+    reader_config.mtl_search_path = model_dir; // Path to material files
     reader_config.triangulate = true;
 
     tinyobj::ObjReader reader;
 
-    if (!reader.ParseFromFile(filename, reader_config)) {
+    if (!reader.ParseFromFile(model_dir + filename, reader_config)) {
         // if (!reader.Error().empty()) std::cerr << "TinyObjReader: " << reader.Error();
         return false;
     }
@@ -55,20 +55,15 @@ bool rtw_obj::load(const std::string& filename) {
                     double tx = attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
                     double ty = attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
 
-                    face.tex_u = tx;
-                    face.tex_v = ty;
+                    face.tex_u[v] = tx;
+                    face.tex_v[v] = ty;
                 }
-
-                // Optional: vertex colors
-                // double red   = attrib.colors[3*size_t(idx.vertex_index)+0];
-                // double green = attrib.colors[3*size_t(idx.vertex_index)+1];
-                // double blue  = attrib.colors[3*size_t(idx.vertex_index)+2];
             }
             
             faces.push_back(face);
             index_offset += fv;
 
-            // per-face material
+            // per-face material. So far left without usage.
             int id = shapes[s].mesh.material_ids[f];
         }
     }
