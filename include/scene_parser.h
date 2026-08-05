@@ -12,6 +12,8 @@ class scene_parser {
 
     bool parse();
     bool load(const std::string& filename);
+    void set_samples_per_pixel(int samples);
+    void set_width(int width);
     void render_scene(const std::string& output_filename);
 
   private:

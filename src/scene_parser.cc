@@ -198,6 +198,14 @@ bool scene_parser::load(const std::string& filename) {
     return true;
 }
 
+void scene_parser::set_samples_per_pixel(int samples) {
+    cam.samples_per_pixel = samples;
+}
+
+void scene_parser::set_width(int width) {
+    cam.image_width = width;
+}
+
 void scene_parser::render_scene(const std::string& output_filename) {
     cam.render(world, output_filename);
 }

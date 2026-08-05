@@ -5,11 +5,18 @@
 int main(int argc, char* argv[]) {
     std::string scene_file = "scene.json";
     std::string output_file = "image.ppm";
+    int samples = 0;
+    int width = 0;
 
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
+
         if ((arg == "-c" || arg == "--scene") && i + 1 < argc) {
             scene_file = argv[++i];
+        } else if ((arg == "-s" || arg == "--samples") && i + 1 < argc) {
+            samples = std::stoi(argv[++i]);
+        } else if ((arg == "-w" || arg == "--width") && i + 1 < argc) {
+            width = std::stoi(argv[++i]);
         } else if ((arg == "-o" || arg == "--output") && i + 1 < argc) {
             output_file = argv[++i];
         }
@@ -17,9 +24,15 @@ int main(int argc, char* argv[]) {
 
     std::cerr << "Loading scene from: " << scene_file << "\n";
 
-    // Build and render
+    // Build the scene
     scene_parser parser(scene_file);
     parser.parse();
+
+    // Override render parameters if provided
+    if (samples) parser.set_samples_per_pixel(samples);
+    if (width) parser.set_width(width);
+
+    // Render the scene
     parser.render_scene(output_file);
 
     return 0;
