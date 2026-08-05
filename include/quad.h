@@ -107,10 +107,18 @@ inline shared_ptr<hittable_list> box(const point3& a, const point3& b, shared_pt
 
 class tri : public quad {
   public:
-    tri(const point3& Q, const vec3& u, const vec3& v, shared_ptr<material> mat)
+  // Constructor accepts the base quad arguments, plus the 3 UV pairs
+    tri(const point3& Q, const vec3& u, const vec3& v, shared_ptr<material> mat,
+        double u0 = 0, double v0 = 0,
+        double u1 = 1, double v1 = 0,
+        double u2 = 0, double v2 = 1)
       : quad(Q, u, v, mat)
     {
         set_bounding_box();
+        
+        uv[0][0] = u0; uv[0][1] = v0;
+        uv[1][0] = u1; uv[1][1] = v1;
+        uv[2][0] = u2; uv[2][1] = v2;
     }
     
     void set_bounding_box() override {
@@ -120,11 +128,24 @@ class tri : public quad {
     }
     
     bool is_interior(double a, double b, hit_record& rec) const override {
-        if (a + b > 1)
+        if (a < 0 || b < 0 || a + b > 1)
             return false;
         
-        return quad::is_interior(a, b, rec);
+        // Then, for given hit point P,
+        // P = Q + a.u + b.v
+        // P = Q0 + a.(Q1 - Q0) + b.(Q2 - Q0)
+        // P = (1.0 - a - b) Q0 + a Q1 + b Q2
+        //     ^^^^^^^^^^^^^      ^      ^
+        double gamma = 1.0 - a - b;
+
+        rec.u = gamma * uv[0][0] + a * uv[1][0] + b * uv[2][0];
+        rec.v = gamma * uv[0][1] + a * uv[1][1] + b * uv[2][1];
+
+        return true;
     }
+  private:
+    // Storage for the UV coordinates of the 3 vertices
+    double uv[3][2];
 };
 
 inline shared_ptr<bvh_node> mesh(const char* filename, shared_ptr<material> mat, double scale = 1) {
@@ -136,7 +157,12 @@ inline shared_ptr<bvh_node> mesh(const char* filename, shared_ptr<material> mat,
         faces.add(make_shared<tri>(scale * face.vertices[0],
                                     scale * (face.vertices[1] - face.vertices[0]),
                                     scale * (face.vertices[2] - face.vertices[0]),
-                                    mat));        
+                                    mat,
+                                    // Pass the UV coordinates from tinyobjloader
+                                    face.tex_u[0], face.tex_v[0],
+                                    face.tex_u[1], face.tex_v[1],
+                                    face.tex_u[2], face.tex_v[2]
+                                ));        
     }
 
     return make_shared<bvh_node>(faces);
