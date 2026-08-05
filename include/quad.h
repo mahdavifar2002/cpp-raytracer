@@ -180,8 +180,8 @@ inline shared_ptr<bvh_node> mesh(const char* filepath, shared_ptr<material> over
                                 ));        
     }
 
-    std::cerr << "> Object '" << filename << "' loaded into the scene with following bounding box:\n";
-    std::cerr << "> " << faces.bounding_box() << "\n";
+    std::cerr << "> Object '" << filename << "' loaded into the scene with " << obj.faces.size() << " triangles.\n";
+    std::cerr << "> Bounding box: " << faces.bounding_box() << "\n";
 
     return make_shared<bvh_node>(faces);
 }
