@@ -169,6 +169,7 @@ bool scene_parser::load(const std::string& filename) {
         cam.aspect_ratio      = c.value("aspect_ratio", 16.0 / 9.0);
         cam.image_width       = c.value("image_width", 400);
         cam.samples_per_pixel = c.value("samples_per_pixel", 100);
+        cam.exposure          = c.value("exposure", 1.0);
         cam.max_depth         = c.value("max_depth", 50);
         cam.vfov              = c.value("vfov", 40.0);
        

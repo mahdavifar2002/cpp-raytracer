@@ -3,6 +3,7 @@
     "aspect_ratio": 1.7777,
     "image_width": 1920,
     "samples_per_pixel": 200,
+    "exposure": 1.0,
     "max_depth": 50,
     "background_image": { "type": "image", "filename": "hdri.jpg" },
     "vfov": 20,

@@ -14,6 +14,7 @@ class camera {
     double  aspect_ratio      = 1.0; // Ration of image width over height 
     int     image_width       = 100; // Rendered image width in pixel count
     int     samples_per_pixel = 10;  // Count of random samples for each pixel
+    double  exposure          = 1.0; // Used in tone-mapping for the png result
     int     max_depth         = 10;  // Maximum number of ray bounces into scene
     shared_ptr<texture> background = make_shared<solid_color>(color(0, 0, 0));
 
@@ -88,10 +89,10 @@ class camera {
                 }
             }
 
-            bar.progress(s, samples_per_pixel);
-
             if (s == 1 || s == 2 || s == 5 || s % 10 == 0 || s == samples_per_pixel)
                 save_image(image, s, filename, bar.time());
+            
+            bar.progress(s, samples_per_pixel);
         }
 
         bar.finish();
@@ -204,6 +205,9 @@ class camera {
     }
 
     void save_image(const std::vector<std::vector<color>>& image, int current_samples,
+                const std::string filename, double time = -1);
+
+    void old_save_image(const std::vector<std::vector<color>>& image, int current_samples,
                     const std::string filename, double time = -1)
     {
         std::ofstream out(filename);
