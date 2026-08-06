@@ -30,7 +30,7 @@
         "offset": [0, 0, 0],
         "object": {
           "type": "mesh",
-          "filename": "livingroom/livingroom.obj",
+          "filename": "livingroom/livingroom-simple.obj",
           "scale": 3
         }
       }
