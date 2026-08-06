@@ -5,12 +5,13 @@
 #include "vec3.h"
 
 #include <iostream>
+#include <cmath>
 
 using color = vec3;
 
 inline double linear_to_gamma(double linear_component) {
     if (linear_component > 0)
-        return std::sqrt(linear_component);
+        return std::pow(linear_component, 1.0 / 2.2);
     
     return 0;
 }
