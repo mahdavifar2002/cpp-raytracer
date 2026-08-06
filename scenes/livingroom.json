@@ -1,0 +1,39 @@
+{
+  "camera": {
+    "aspect_ratio": 1.7777,
+    "image_width": 1920,
+    "samples_per_pixel": 200,
+    "exposure": 1.0,
+    "max_depth": 50,
+    "background_image": { "type": "image", "filename": "hdri.jpg" },
+    "vfov": 20,
+    "lookfrom": [-0.8, 3.3, 23],
+    "lookat": [-0.8, 2.3, 0],
+    "vup": [0, 1, 0],
+    "defocus_angle": 0.6,
+    "focus_dist": 23
+  },
+  "world": [
+    {
+      "type": "quad",
+      "Q": [-20, 0, -40], "u": [0, 0, 80], "v": [40, 0, 0],
+      "material": {
+        "type": "lambertian",
+        "texture": { "type": "image", "filename": "table.jpg" }
+      }
+    },
+    {
+      "type": "rotate_y",
+      "angle": -30,
+      "object": {
+        "type": "translate",
+        "offset": [0, 0, 0],
+        "object": {
+          "type": "mesh",
+          "filename": "livingroom/livingroom.obj",
+          "scale": 3
+        }
+      }
+    }
+  ]
+}
