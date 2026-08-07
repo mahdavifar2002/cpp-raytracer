@@ -13,8 +13,9 @@ inline shared_ptr<material> translate_mtl(const tinyobj::material_t& mtl, const 
     }
 
     // 2. Is it glass / transparent? (Check Index of Refraction 'Ni' or Dissolve 'd')
-    // Ni = 1.0 is air. Typical glass is ~1.5. 
-    if (mtl.ior > 1.05 || mtl.dissolve < (1.0 - EPSILON)) {
+    // Ni = 1.0 is air. Typical glass is ~1.5.
+    // NOTE: I removed the condition `|| (mtl.ior > 1.05)` because Blender defaults Ni to 1.5
+    if (mtl.dissolve < (1.0 - EPSILON)) {
         // Fallback to 1.5 if IOR isn't explicitly set but dissolve is used
         double ir = (mtl.ior > 1.0) ? mtl.ior : 1.5; 
         return make_shared<dielectric>(ir);
