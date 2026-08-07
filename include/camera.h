@@ -15,7 +15,7 @@ class camera {
     int     image_width       = 100; // Rendered image width in pixel count
     int     samples_per_pixel = 10;  // Count of random samples for each pixel
     double  exposure          = 1.0; // Used in tone-mapping for the png result
-    int     max_depth         = 10;  // Maximum number of ray bounces into scene
+    int     max_depth         = 6;   // Maximum number of ray bounces into scene
     shared_ptr<texture> background = make_shared<solid_color>(color(0, 0, 0));
 
     double vfov     = 90;               // Vertical view angle (field of view)
