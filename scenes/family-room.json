@@ -4,7 +4,7 @@
     "image_width": 1440,
     "samples_per_pixel": 200,
     "exposure": 1.0,
-    "max_depth": 50,
+    "max_depth": 6,
     "background_image": { "type": "image", "filename": "hdri.jpg" },
     "vfov": 20,
     "lookfrom": [0, 0.75, 7.5],

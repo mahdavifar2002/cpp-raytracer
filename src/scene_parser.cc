@@ -170,7 +170,7 @@ bool scene_parser::load(const std::string& filename) {
         cam.image_width       = c.value("image_width", 400);
         cam.samples_per_pixel = c.value("samples_per_pixel", 100);
         cam.exposure          = c.value("exposure", 1.0);
-        cam.max_depth         = c.value("max_depth", 50);
+        cam.max_depth         = c.value("max_depth", 6);
         cam.vfov              = c.value("vfov", 40.0);
        
         if (c.contains("lookfrom")) cam.lookfrom = parse_vec3(c["lookfrom"]);
